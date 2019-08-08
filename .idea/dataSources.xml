@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="betdb@betdb.cxzzltiwn8rj.us-west-2.rds.amazonaws.com" uuid="4ae07f7b-7f2a-4ffc-afa4-53a94cd87fe3">
+      <driver-ref>postgresql</driver-ref>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://betdb.cxzzltiwn8rj.us-west-2.rds.amazonaws.com:5432/betdb</jdbc-url>
+    </data-source>
+  </component>
+</project>
