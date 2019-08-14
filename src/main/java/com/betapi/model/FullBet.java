@@ -1,4 +1,4 @@
-package com.betapi;
+package com.betapi.model;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +10,8 @@ public class FullBet {
     private String teamB;
     private Double oddA;
     private Double oddB;
+    private Double oddN;
+    private BetChoice betChoice;
     private LocalDateTime gametime;
     private Double amount;
     private LocalDateTime savedtime;
@@ -18,16 +20,6 @@ public class FullBet {
 
     }
 
-    public FullBet(Long id, String teamA, String teamB, Double oddA, Double oddB, LocalDateTime gametime, Double amount, LocalDateTime savedtime) {
-        this.id = id;
-        this.teamA = teamA;
-        this.teamB = teamB;
-        this.oddA = oddA;
-        this.oddB = oddB;
-        this.gametime = gametime;
-        this.amount = amount;
-        this.savedtime = savedtime;
-    }
 
     public Long getId() {
         return id;
@@ -99,5 +91,21 @@ public class FullBet {
 
     public void setGameId(Long gameId) {
         this.gameId = gameId;
+    }
+
+    public Double getOddN() {
+        return oddN;
+    }
+
+    public void setOddN(Double oddN) {
+        this.oddN = oddN;
+    }
+
+    public BetChoice getBetChoice() {
+        return betChoice;
+    }
+
+    public void setBetChoice(BetChoice betChoice) {
+        this.betChoice = betChoice;
     }
 }

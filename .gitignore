@@ -2,7 +2,7 @@
 target
 .idea
 *.class
-
+*.pem
 # Log file
 *.log
 

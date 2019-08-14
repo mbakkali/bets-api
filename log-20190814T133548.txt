@@ -1,0 +1,12 @@
+625  [main] INFO  com.betapi.BetApiApplication - Starting BetApiApplication on MacBook-Pro-de-Mehdi.local with PID 9554 (/Users/mehdibakkali/projects/bets-api/target/classes started by mehdibakkali in /Users/mehdibakkali/projects/bets-api)
+635  [main] INFO  com.betapi.BetApiApplication - No active profile set, falling back to default profiles: default
+1567 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data repositories in DEFAULT mode.
+1625 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 49ms. Found 3 repository interfaces.
+1982 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$60530746] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2169 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2186 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2194 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2195 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.22]
+2326 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2326 [main] INFO  o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 1649 ms
+2471 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...

@@ -1,4 +1,4 @@
-package com.betapi;
+package com.betapi.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,6 +21,9 @@ public class Game {
 
     @Column
     private Double oddB;
+
+    @Column
+    private Double oddN;
 
     @Column
     private LocalDateTime datetime;
@@ -83,5 +86,13 @@ public class Game {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Double getOddN() {
+        return oddN;
+    }
+
+    public void setOddN(Double oddN) {
+        this.oddN = oddN;
     }
 }

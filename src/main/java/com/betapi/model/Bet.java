@@ -1,4 +1,4 @@
-package com.betapi;
+package com.betapi.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,6 +17,9 @@ public class Bet {
 
     @Column
     private Double amount;
+
+    @Column
+    private BetChoice betChoice;
 
     @Column
     @CreationTimestamp
@@ -66,4 +69,11 @@ public class Bet {
         this.datetime = datetime;
     }
 
+    public BetChoice getBetChoice() {
+        return betChoice;
+    }
+
+    public void setBetChoice(BetChoice betChoice) {
+        this.betChoice = betChoice;
+    }
 }
