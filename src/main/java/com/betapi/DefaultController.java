@@ -80,6 +80,18 @@ public class DefaultController {
         return getFullBetsFromBets(allById);
     }
 
+    @DeleteMapping("/bets/delete/user/{id}")
+    public void deleteOneUserBet(@PathVariable Long id) {
+        logger.info("Deleted one user bet : " + id);
+        Owner owner = userRepository.findById(id).orElseGet(null);
+        if (owner == null) {
+            logger.error("Can't save owner");
+        }else {
+            betRepository.deleteAllById(owner.getBets());
+            userRepository.deleteById(id);
+        }
+    }
+
     @DeleteMapping("/bets/delete/{id}")
     public void deleteOneBet(@PathVariable Long id) {
         logger.info("Deleted bet : " + id);
