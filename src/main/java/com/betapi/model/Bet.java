@@ -15,6 +15,17 @@ public class Bet {
     @Column
     private Long gameId;
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    @Column
+    private Long ownerId;
+
     @Column
     private Double amount;
 
@@ -25,13 +36,6 @@ public class Bet {
     @CreationTimestamp
     private LocalDateTime datetime;
 
-    public Bet(Long id, Long gameId, Double amount, LocalDateTime datetime){
-
-        this.id = id;
-        this.gameId = gameId;
-        this.amount = amount;
-        this.datetime = datetime;
-    }
 
     public Bet(){
 

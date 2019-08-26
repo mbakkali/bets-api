@@ -1,9 +1,6 @@
 package com.betapi;
 
-import com.betapi.model.Bet;
-import com.betapi.model.FullBet;
-import com.betapi.model.Game;
-import com.betapi.model.Owner;
+import com.betapi.model.*;
 import com.betapi.services.BetRepository;
 import com.betapi.services.GameRepository;
 import com.betapi.services.UserRepository;
@@ -15,9 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 
 @RestController
@@ -27,7 +29,9 @@ public class DefaultController {
     private final GameRepository gameRepository;
     private final BetRepository betRepository;
     private final UserRepository userRepository;
-
+    Locale locale = Locale.forLanguageTag( "fr-FR" );
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm").withLocale(locale);
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM").withLocale(locale);
 
     @Autowired
     public DefaultController(GameRepository gameRepository, BetRepository betRepository, UserRepository userRepository) {
@@ -44,10 +48,82 @@ public class DefaultController {
 
     @DeleteMapping("/games/delete/{id}")
     public void deleteOneGame(@PathVariable Long id) {
-        List<Bet> allByGameId = betRepository.findAllByGameId(id);
-        betRepository.deleteAll(allByGameId);
         gameRepository.deleteById(id);
         logger.info("Deleted game : " + id);
+    }
+
+    @GetMapping("/stats")
+    public Statistics getStatistics() {
+        logger.info("Get Statistics");
+        Statistics statistics = new Statistics();
+        List<FullBet> allBets = getAllBets();
+
+        long allActiveGames = 0L;
+        long allPassedGames = 0L;
+        for (Game game : gameRepository.findAll()) {
+            if (game.getDatetime().isAfter(LocalDateTime.now())) {
+                allActiveGames += 1;
+            }else {
+                allPassedGames +=1;
+            }
+        }
+
+        long allBetsCount = StreamSupport.stream(userRepository.findAll().spliterator(), false).count();
+
+        double totalAmout = 0D;
+        for (FullBet bet : allBets) {
+            totalAmout += bet.getAmount();
+        }
+
+        SortedMap<LocalDate, Double> amountBydaysMap = new TreeMap<>();
+        amountBydaysMap.put(LocalDate.now().minusDays(6), 0D);
+        amountBydaysMap.put(LocalDate.now().minusDays(5), 0D);
+        amountBydaysMap.put(LocalDate.now().minusDays(4), 0D);
+        amountBydaysMap.put(LocalDate.now().minusDays(3), 0D);
+        amountBydaysMap.put(LocalDate.now().minusDays(2), 0D);
+        amountBydaysMap.put(LocalDate.now().minusDays(1), 0D);
+        amountBydaysMap.put(LocalDate.now(), 0D);
+
+        for (FullBet bet : allBets) {
+            if (bet.getSavedtime().isAfter(LocalDateTime.now().minusWeeks(1))) {
+                LocalDate dayOfWeek = bet.getSavedtime().toLocalDate();
+                Double currentAmount = amountBydaysMap.get(dayOfWeek);
+                amountBydaysMap.put(dayOfWeek, currentAmount + bet.getAmount());
+            }
+        }
+        List<ChartElement> amountByDays = new ArrayList<>();
+        amountBydaysMap.forEach((dayOfWeek, aDouble) -> amountByDays.add(new ChartElement(dayOfWeek.format(dateFormatter),aDouble)));
+
+        Map<String, Double> top10GamesMap = new HashMap<>();
+        for (FullBet bet : allBets) {
+            if (bet.getGameId() == null) {
+                continue;
+            }
+            String gameKey = bet.getTeamA() + " - " + bet.getTeamB() + " le " + bet.getGametime().format(formatter);
+            if (!top10GamesMap.containsKey(gameKey)) {
+                top10GamesMap.put(gameKey, bet.getAmount());
+            } else {
+                Double currentAmount = top10GamesMap.get(gameKey);
+                top10GamesMap.put(gameKey, currentAmount + bet.getAmount());
+            }
+        }
+        List<ChartElement> top10Games = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : top10GamesMap.entrySet()) {
+            top10Games.add(new ChartElement(entry.getKey(),entry.getValue()));
+        }
+        top10Games.sort(Comparator.comparing(ChartElement::getValue));
+        if(top10Games.size() > 10){
+            top10Games = new ArrayList<>(top10Games.subList(top10Games.size() - 10, top10Games.size()));
+        }
+
+
+        statistics.setGameNumber(allActiveGames);
+        statistics.setGameEndedNumber(allPassedGames);
+        statistics.setBetNumber(allBetsCount);
+        statistics.setTotalAmount(totalAmout);
+        statistics.setChartElements(amountByDays);
+        statistics.setTop10Games(top10Games);
+        return statistics;
     }
 
     @GetMapping("/games")
@@ -65,7 +141,32 @@ public class DefaultController {
     @GetMapping("/bets")
     public List<FullBet> getAllBets() {
         logger.info("Get All bets");
-        return getFullBetsFromBets(Lists.newArrayList(betRepository.findAll()));
+        List<Bet> bets = Lists.newArrayList(betRepository.findAll());
+        Map<Long, Game> games = Lists.newArrayList(gameRepository.findAll()).stream().collect(Collectors.toMap(Game::getId, Function.identity()));
+        List<FullBet> fullBets = new ArrayList<>();
+
+        for (Bet bet : bets) {
+            FullBet fullBet = new FullBet();
+            fullBet.setAmount(bet.getAmount());
+            fullBet.setId(bet.getId());
+            fullBet.setSavedtime(bet.getDatetime());
+            fullBet.setBetChoice(bet.getBetChoice());
+            fullBet.setOwnerId(bet.getOwnerId());
+
+            Game game = games.get(bet.getGameId());
+            if (game == null) {
+                logger.error("Game not found");
+            } else {
+                fullBet.setGameId(game.getId());
+                fullBet.setTeamB(game.getTeamB());
+                fullBet.setTeamA(game.getTeamA());
+                fullBet.setGametime(game.getDatetime());
+                fullBet.setOddA(game.getOddA());
+                fullBet.setOddB(game.getOddB());
+            }
+            fullBets.add(fullBet);
+        }
+        return fullBets;
     }
 
     @GetMapping("/bets/info/{id}")
@@ -82,12 +183,15 @@ public class DefaultController {
 
     @DeleteMapping("/bets/delete/user/{id}")
     public void deleteOneUserBet(@PathVariable Long id) {
-        logger.info("Deleted one user bet : " + id);
+        logger.info("Deling one user bet : " + id);
         Owner owner = userRepository.findById(id).orElseGet(null);
         if (owner == null) {
             logger.error("Can't save owner");
-        }else {
-            betRepository.deleteAllById(owner.getBets());
+        } else {
+            for (Long betId : owner.getBets()) {
+                betRepository.deleteById(betId);
+                logger.info("Deleted bet number " + betId);
+            }
             userRepository.deleteById(id);
         }
     }
@@ -102,12 +206,15 @@ public class DefaultController {
     @PostMapping(value = "/bets")
     public Long saveBets(@RequestBody List<Bet> newBets) throws JsonProcessingException {
         logger.info("Saving : " + new ObjectMapper().writeValueAsString(newBets));
-        Iterable<Bet> bets = betRepository.saveAll(newBets);
-        logger.info("Saved bets: " + new ObjectMapper().writeValueAsString(Lists.newArrayList(bets)));
-        List<Long> ids = Lists.newArrayList(bets).stream().map(Bet::getId).collect(Collectors.toList());
         Owner owner = new Owner();
-        owner.setBets(ids);
         Owner savedOwner = userRepository.save(owner);
+        for (Bet newBet : newBets) {
+            newBet.setOwnerId(savedOwner.getId());
+        }
+        Iterable<Bet> bets = betRepository.saveAll(newBets);
+        List<Long> ids = Lists.newArrayList(bets).stream().map(Bet::getId).collect(Collectors.toList());
+        savedOwner.setBets(ids);
+        userRepository.save(savedOwner);
         logger.info("Saved owner : " + new ObjectMapper().writeValueAsString(owner));
         return savedOwner.getId();
     }
@@ -120,18 +227,23 @@ public class DefaultController {
             fullBet.setId(bet.getId());
             fullBet.setSavedtime(bet.getDatetime());
             fullBet.setBetChoice(bet.getBetChoice());
+            fullBet.setOwnerId(bet.getOwnerId());
 
             //Retrieve game
-            Game game = gameRepository.findById(bet.getGameId()).orElseGet(null);
-            if (game == null) {
+            try {
+                Game game = gameRepository.findById(bet.getGameId()).orElseGet(null);
+                if (game == null) {
+                    logger.error("Game not found");
+                } else {
+                    fullBet.setGameId(game.getId());
+                    fullBet.setTeamB(game.getTeamB());
+                    fullBet.setTeamA(game.getTeamA());
+                    fullBet.setGametime(game.getDatetime());
+                    fullBet.setOddA(game.getOddA());
+                    fullBet.setOddB(game.getOddB());
+                }
+            } catch (Exception e) {
                 logger.error("Game not found");
-            } else {
-                fullBet.setGameId(game.getId());
-                fullBet.setTeamB(game.getTeamB());
-                fullBet.setTeamA(game.getTeamA());
-                fullBet.setGametime(game.getDatetime());
-                fullBet.setOddA(game.getOddA());
-                fullBet.setOddB(game.getOddB());
             }
             fullBets.add(fullBet);
         });

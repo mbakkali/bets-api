@@ -15,6 +15,7 @@ public class FullBet {
     private LocalDateTime gametime;
     private Double amount;
     private LocalDateTime savedtime;
+    private Long ownerId;
 
     public FullBet(){
 
@@ -107,5 +108,13 @@ public class FullBet {
 
     public void setBetChoice(BetChoice betChoice) {
         this.betChoice = betChoice;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }
