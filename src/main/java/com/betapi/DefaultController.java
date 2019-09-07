@@ -3,7 +3,7 @@ package com.betapi;
 import com.betapi.model.*;
 import com.betapi.services.BetRepository;
 import com.betapi.services.GameRepository;
-import com.betapi.services.UserRepository;
+import com.betapi.services.BetOwnerRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.google.common.collect.Lists;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,19 +24,19 @@ import java.util.stream.StreamSupport;
 @RestController
 public class DefaultController {
 
-    Logger logger = LoggerFactory.getLogger(DefaultController.class);
+    private Logger logger = LoggerFactory.getLogger(DefaultController.class);
     private final GameRepository gameRepository;
     private final BetRepository betRepository;
-    private final UserRepository userRepository;
-    Locale locale = Locale.forLanguageTag( "fr-FR" );
+    private final BetOwnerRepository betOwnerRepository;
+    private Locale locale = Locale.forLanguageTag( "fr-FR" );
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm").withLocale(locale);
     DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM").withLocale(locale);
 
     @Autowired
-    public DefaultController(GameRepository gameRepository, BetRepository betRepository, UserRepository userRepository) {
+    public DefaultController(GameRepository gameRepository, BetRepository betRepository, BetOwnerRepository betOwnerRepository) {
         this.gameRepository = gameRepository;
         this.betRepository = betRepository;
-        this.userRepository = userRepository;
+        this.betOwnerRepository = betOwnerRepository;
     }
 
     @GetMapping("/games/{id}")
@@ -68,7 +67,7 @@ public class DefaultController {
             }
         }
 
-        long allBetsCount = StreamSupport.stream(userRepository.findAll().spliterator(), false).count();
+        long allBetsCount = StreamSupport.stream(betOwnerRepository.findAll().spliterator(), false).count();
 
         double totalAmout = 0D;
         for (FullBet bet : allBets) {
@@ -85,7 +84,7 @@ public class DefaultController {
         amountBydaysMap.put(LocalDate.now(), 0D);
 
         for (FullBet bet : allBets) {
-            if (bet.getSavedtime().isAfter(LocalDateTime.now().minusWeeks(1))) {
+            if (bet.getSavedtime().isAfter(LocalDateTime.now().minusWeeks(1).plusDays(1))) {
                 LocalDate dayOfWeek = bet.getSavedtime().toLocalDate();
                 Double currentAmount = amountBydaysMap.get(dayOfWeek);
                 amountBydaysMap.put(dayOfWeek, currentAmount + bet.getAmount());
@@ -172,27 +171,27 @@ public class DefaultController {
     @GetMapping("/bets/info/{id}")
     public List<FullBet> getUserBets(@PathVariable Long id) {
         logger.info("Get Owner bets : " + id);
-        Owner owner = userRepository.findById(id).orElseGet(null);
-        if (owner == null) {
+        BetOwner betOwner = betOwnerRepository.findById(id).orElseGet(null);
+        if (betOwner == null) {
             logger.error("Can't save owner");
             return new ArrayList<>();
         }
-        List<Bet> allById = Lists.newArrayList(betRepository.findAllById(owner.getBets()));
+        List<Bet> allById = Lists.newArrayList(betRepository.findAllById(betOwner.getBets()));
         return getFullBetsFromBets(allById);
     }
 
     @DeleteMapping("/bets/delete/user/{id}")
     public void deleteOneUserBet(@PathVariable Long id) {
         logger.info("Deling one user bet : " + id);
-        Owner owner = userRepository.findById(id).orElseGet(null);
-        if (owner == null) {
+        BetOwner betOwner = betOwnerRepository.findById(id).orElseGet(null);
+        if (betOwner == null) {
             logger.error("Can't save owner");
         } else {
-            for (Long betId : owner.getBets()) {
+            for (Long betId : betOwner.getBets()) {
                 betRepository.deleteById(betId);
                 logger.info("Deleted bet number " + betId);
             }
-            userRepository.deleteById(id);
+            betOwnerRepository.deleteById(id);
         }
     }
 
@@ -206,17 +205,17 @@ public class DefaultController {
     @PostMapping(value = "/bets")
     public Long saveBets(@RequestBody List<Bet> newBets) throws JsonProcessingException {
         logger.info("Saving : " + new ObjectMapper().writeValueAsString(newBets));
-        Owner owner = new Owner();
-        Owner savedOwner = userRepository.save(owner);
+        BetOwner betOwner = new BetOwner();
+        BetOwner savedBetOwner = betOwnerRepository.save(betOwner);
         for (Bet newBet : newBets) {
-            newBet.setOwnerId(savedOwner.getId());
+            newBet.setOwnerId(savedBetOwner.getId());
         }
         Iterable<Bet> bets = betRepository.saveAll(newBets);
         List<Long> ids = Lists.newArrayList(bets).stream().map(Bet::getId).collect(Collectors.toList());
-        savedOwner.setBets(ids);
-        userRepository.save(savedOwner);
-        logger.info("Saved owner : " + new ObjectMapper().writeValueAsString(owner));
-        return savedOwner.getId();
+        savedBetOwner.setBets(ids);
+        betOwnerRepository.save(savedBetOwner);
+        logger.info("Saved owner : " + new ObjectMapper().writeValueAsString(betOwner));
+        return savedBetOwner.getId();
     }
 
     private List<FullBet> getFullBetsFromBets(List<Bet> bets) {

@@ -1,0 +1,9 @@
+version: 0.0
+os: linux
+files:
+  - source: ./
+    destination: /home/ubuntu/bets-api
+hooks:
+  ApplicationStart:
+    - location: java -jar bets-api
+      runas: ubuntu

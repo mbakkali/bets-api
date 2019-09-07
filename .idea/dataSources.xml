@@ -6,5 +6,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://betdb.cxzzltiwn8rj.us-west-2.rds.amazonaws.com:5432/betdb</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="axelor@betdb.cxzzltiwn8rj.us-west-2.rds.amazonaws.com" uuid="029cedbd-0866-4d3c-bfb2-c4ee30c750f5">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://betdb.cxzzltiwn8rj.us-west-2.rds.amazonaws.com:5432/axelor</jdbc-url>
+    </data-source>
   </component>
 </project>

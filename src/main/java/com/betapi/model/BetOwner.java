@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
-public class Owner {
+public class BetOwner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,13 +25,13 @@ public class Owner {
     private String bets;
 
 
-    public Owner(Long id, LocalDateTime timestamp, String bets){
+    public BetOwner(Long id, LocalDateTime timestamp, String bets){
         this.id = id;
         this.timestamp = timestamp;
         this.bets = bets;
     }
 
-    public Owner(){
+    public BetOwner(){
 
     }
 
