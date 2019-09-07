@@ -11,6 +11,10 @@ logs
 
 # BlueJ files
 *.ctxt
+*.iml
+*.p12
+
+*.pem
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
