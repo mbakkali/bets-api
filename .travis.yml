@@ -16,7 +16,7 @@ deploy:
     local_dir: /home/travis/build/jonashackt/spring-boot-vuejs/backend/target
     skip_cleanup: true
     on: &1
-      repo: mbakkali/bets
+      repo: mbakkali/bets-api
     bucket: bets-api-bucket
     region: eu-west-3
   - provider: codedeploy
