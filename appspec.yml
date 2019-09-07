@@ -5,5 +5,5 @@ files:
     destination: /home/ubuntu/bets-api
 hooks:
   ApplicationStart:
-    - location: java -jar bets-api
+    - location: deploy.sh
       runas: ubuntu
