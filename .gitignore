@@ -9,10 +9,11 @@ logs
 .DS_Store
 .idea
 
+*.pid
 # BlueJ files
 *.ctxt
 *.iml
-*.p12
+keystore.p12
 
 *.pem
 

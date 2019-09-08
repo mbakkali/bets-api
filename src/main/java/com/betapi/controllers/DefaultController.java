@@ -1,4 +1,4 @@
-package com.betapi;
+package com.betapi.controllers;
 
 import com.betapi.model.*;
 import com.betapi.services.BetRepository;

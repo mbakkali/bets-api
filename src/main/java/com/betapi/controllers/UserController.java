@@ -1,21 +1,16 @@
-package com.betapi;
+package com.betapi.controllers;
 
 import com.betapi.model.User;
 import com.betapi.services.UserRepository;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.net.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @CrossOrigin

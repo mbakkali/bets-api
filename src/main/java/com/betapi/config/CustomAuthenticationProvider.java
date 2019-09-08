@@ -1,6 +1,6 @@
 package com.betapi.config;
 
-import com.betapi.DefaultController;
+import com.betapi.controllers.DefaultController;
 import com.betapi.model.User;
 import com.betapi.services.UserRepository;
 import org.slf4j.Logger;
