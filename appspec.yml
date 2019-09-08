@@ -4,6 +4,11 @@ files:
   - source: ./
     destination: /home/ubuntu/bets-api
 hooks:
+  ApplicationStop:
+    - location: deploy/stop.sh
+      timeout: 20
   ApplicationStart:
-    - location: deploy.sh
-      runas: ubuntu
+    - location: deploy/start.sh
+  ValidateService:
+    - location: deploy/validate.sh
+      timeout: 20
