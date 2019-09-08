@@ -12,3 +12,6 @@ hooks:
   ValidateService:
     - location: deploy/validate.sh
       timeout: 20
+  BeforeInstall:
+    - location: sudo rm -rf bets-api
+      timeout: 20
