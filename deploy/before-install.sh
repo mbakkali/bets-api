@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-echo "BEFORE-INSTALL - Current repo is :"
-pwd
+cd /home/ubuntu/bets-api
 echo "BEFORE-INSTALL - Deleting bets-api repository ..."
 sudo rm -rf bets-api
 echo "BEFORE-INSTALL - Deleted bets-api repository with success"
