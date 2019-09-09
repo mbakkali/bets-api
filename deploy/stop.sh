@@ -11,4 +11,3 @@ pid=`cat $PID_PATH`
        echo "Stopped app with PID:$pid..."
 
 fi
-sudo rm -rf bets-api

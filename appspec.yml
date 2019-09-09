@@ -11,7 +11,7 @@ hooks:
     - location: deploy/start.sh
   ValidateService:
     - location: deploy/validate.sh
-      timeout: 20
+      timeout: 100
   BeforeInstall:
     - location: deploy/before-install.sh
       timeout: 20
