@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-cd /home/ubuntu/bets-api
+cd /home/ubuntu
 echo "BEFORE-INSTALL - Deleting bets-api repository ..."
 sudo rm -rf bets-api
 echo "BEFORE-INSTALL - Deleted bets-api repository with success"
