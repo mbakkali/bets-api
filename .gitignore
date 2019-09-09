@@ -7,13 +7,11 @@ logs
 # Log file
 *.log
 .DS_Store
-.idea
 
 *.pid
 # BlueJ files
 *.ctxt
 *.iml
-keystore.p12
 
 *.pem
 
