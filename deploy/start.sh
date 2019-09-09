@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-echo 'Building application'
+echo 'START - Building application with maven'
 cd '/home/ubuntu/bets-api'
 sudo mvn clean install -DskipTests
-echo 'Running application'
+echo 'START - Setting exe rights to bets-api.jar'
 sudo chmod 400 bets-api.jar
+echo 'START - Running application'
 sudo nohup java -jar target/bets-api.jar > /dev/null 2>&1 &
