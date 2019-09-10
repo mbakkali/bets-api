@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Script to stop the application
-PID_PATH="application.pid"
+PID_PATH="../application.pid"
 if [ ! -f "$PID_PATH" ]; then
    echo "STOP - Process Id FilePath($PID_PATH) Not found"
 else
