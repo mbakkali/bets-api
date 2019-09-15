@@ -38,7 +38,9 @@ public class BasicAuthConfiguration extends WebSecurityConfigurerAdapter {
                 "/swagger-ui.html",
                 "/webjars/**",
                 "/actuator/**",
-                "/validateLogin/**");
+                "/validateLogin/**",
+                "/h2/**",
+                "/swagger-ui.html");
     }
 
     @Bean
