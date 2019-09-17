@@ -6,6 +6,7 @@ import com.betapi.services.GameRepository;
 import com.betapi.services.BetOwnerRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,13 @@ public class DefaultController {
 
     @GetMapping("/games/{id}")
     public Game getOneGame(@PathVariable Long id) {
-        logger.info("Get One Game: " + id);
-        return gameRepository.findById(id).orElseGet(null);
+        if(id != null){
+            // Replace pattern-breaking characters
+            logger.info("Get One Game: " + id);
+            return gameRepository.findById(id).orElseGet(null);
+        }
+        return null;
+
     }
 
     @DeleteMapping("/games/delete/{id}")
