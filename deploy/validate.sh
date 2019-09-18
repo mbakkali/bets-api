@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 while [ true ]
 do
-    if [ "$(curl -s -k  https://localhost:8081/actuator/health)" = '{"status":"UP","details":{"db":{"status":"UP","details":{"database":"PostgreSQL","hello":1}}}}' ]
+    if [ "$(curl -s -k  https://localhost:8081/actuator/health)" = '{"status":"UP"}' ]
     then
         echo "VALIDATE - Server is up and running ! "
         exit 0
