@@ -8,4 +8,5 @@ pid=`cat $PID_PATH`
        echo "STOP - Stopping app wih pid $pid"
        sudo kill $pid;
        echo "STOP - Stopped app with PID:$pid..."
+       sleep 10
 fi
