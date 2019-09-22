@@ -6,9 +6,8 @@
 
 
 Security : Root user is : {username : root, password : root}
-Swagger : https://localhost:8081/bets-api/swagger-ui.html
-Database H2 console : https://localhost:8081/bets-api/h2/console
-Actuator : https://localhost:8081/bets-api/actuator
+Swagger : http://localhost:8080/bets-api/swagger-ui.html
+Database H2 console : http://localhost:8080/bets-api/h2/console
+Actuator : http://localhost:8080/bets-api/actuator
 
-================================================================================
-================================================================================
+
