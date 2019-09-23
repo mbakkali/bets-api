@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = {"/users/{id}"})
-    public User delete(@PathVariable("id") String id) {
+    public User deleteUser(@PathVariable("id") String id) {
         User deletedEmp = userRepository.findById(id).orElseGet(null);
         if (deletedEmp == null) {
             logger.error("Can't find user with id " + id);
@@ -69,7 +69,7 @@ public class UserController {
 
 
     @PostMapping(path = "/users")
-    public User create(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
         User saved;
         try {
             saved = userRepository.save(user);
