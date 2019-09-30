@@ -1,12 +1,13 @@
 package com.betapi.controllers;
 
-import com.betapi.model.User;
-import com.betapi.services.UserRepository;
+import com.betapi.models.User;
+import com.betapi.repositories.UserRepository;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -17,13 +18,16 @@ import java.util.Optional;
 @RestController
 public class UserController {
 
-    @Autowired
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
     private Logger logger = LoggerFactory.getLogger(DefaultController.class);
     private User notFoundUser = notFoundUser();
 
-    public UserController(UserRepository userRepository) {
+    @Autowired
+    public UserController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping(path = "/users")
@@ -44,8 +48,7 @@ public class UserController {
         Optional<User> byId = userRepository.findById(username);
 
         if(byId.isPresent()){
-            if(byId.get().getUserName().equals(username) && byId.get().getPassword().equals(pwd)){
-                byId.get().setStatus("OK");
+            if(byId.get().getUsername().equals(username) && byId.get().getPassword().equals(passwordEncoder.encode(pwd))){
                 return byId.get();
             }else {
                return notFoundUser;
@@ -82,7 +85,6 @@ public class UserController {
 
     private User notFoundUser(){
         User notFoundUser = new User();
-        notFoundUser.setStatus("L'utilisateur n'est pas reconnu");
         return notFoundUser;
     }
 }

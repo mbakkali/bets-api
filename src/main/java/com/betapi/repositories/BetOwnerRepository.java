@@ -1,6 +1,6 @@
-package com.betapi.services;
+package com.betapi.repositories;
 
-import com.betapi.model.BetOwner;
+import com.betapi.models.BetOwner;
 import org.springframework.data.repository.CrudRepository;
 
 public interface BetOwnerRepository extends CrudRepository<BetOwner,Long> {

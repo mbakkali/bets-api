@@ -1,4 +1,4 @@
-package com.betapi.model;
+package com.betapi.models;
 
 import com.google.common.base.Strings;
 import org.hibernate.annotations.CreationTimestamp;

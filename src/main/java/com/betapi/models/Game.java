@@ -1,4 +1,4 @@
-package com.betapi.model;
+package com.betapi.models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

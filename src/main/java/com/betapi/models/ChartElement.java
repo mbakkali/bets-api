@@ -1,4 +1,4 @@
-package com.betapi.model;
+package com.betapi.models;
 
 public class ChartElement {
     String name;

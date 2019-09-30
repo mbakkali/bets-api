@@ -1,12 +1,11 @@
 package com.betapi.controllers;
 
-import com.betapi.model.*;
-import com.betapi.services.BetRepository;
-import com.betapi.services.GameRepository;
-import com.betapi.services.BetOwnerRepository;
+import com.betapi.models.*;
+import com.betapi.repositories.BetRepository;
+import com.betapi.repositories.GameRepository;
+import com.betapi.repositories.BetOwnerRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

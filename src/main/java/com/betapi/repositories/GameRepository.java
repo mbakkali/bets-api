@@ -1,6 +1,6 @@
-package com.betapi.services;
+package com.betapi.repositories;
 
-import com.betapi.model.Game;
+import com.betapi.models.Game;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
