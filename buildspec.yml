@@ -9,6 +9,7 @@ phases:
       - mvn clean install
 artifacts:
   files:
-    - bets-api.jar
+    - target/bets-api.jar
     - appspec.yml
     - deploy/**
+  discard-paths: yes
