@@ -12,4 +12,3 @@ artifacts:
     - target/bets-api.jar
     - appspec.yml
     - deploy/**
-  discard-paths: yes
