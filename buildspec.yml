@@ -11,3 +11,4 @@ artifacts:
   files:
     - target/bets-api.jar
     - appspec.yml
+    - deploy
