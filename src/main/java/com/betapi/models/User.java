@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "users")//Can't create table named "user"
 public class User implements UserDetails {
 
     @Id
