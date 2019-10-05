@@ -3,3 +3,5 @@
  | _ \/ -_)  _| |___| / _` | '_ \ |
  |___/\___|\__|       \__,_| .__/_|
                            |_|
+Swagger : http://localhost:8080/bets-api/swagger-ui.html
+Actuator : http://localhost:8080/bets-api/actuator

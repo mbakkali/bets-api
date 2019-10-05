@@ -1,5 +1,6 @@
-package com.betapi.models;
+package com.betapi.controllers.dtos;
 
+import com.betapi.models.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,43 +9,19 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "users")//Can't create table named "user"
-public class User implements UserDetails {
+public class UserDTO  {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String username;
-
     private String password;
-
     private boolean accountNonExpired;
-
     private boolean accountNonLocked;
-
     private boolean credentialsNonExpired;
-
     private boolean enabled;
-
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(fetch = FetchType.EAGER)
     private List<Role> roles;
 
-    public User() {
-        this.accountNonExpired = true;
-        this.accountNonLocked = true;
-        this.credentialsNonExpired = true;
-        this.enabled = true;
-    }
+    public UserDTO() {
 
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
     }
 
     public Long getId() {
@@ -55,7 +32,6 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
@@ -64,7 +40,6 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
@@ -73,36 +48,43 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    @Override
     public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
 
-    @Override
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
     public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
 
-    @Override
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
     public boolean isCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    @Override
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
-    public void grantAuthority(Role authority) {
-        if ( roles == null ) roles = new ArrayList<>();
-        roles.add(authority);
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    @Override
-    public List<GrantedAuthority> getAuthorities(){
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.toString())));
-        return authorities;
+    public List<Role> getRoles() {
+        return roles;
     }
 
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 }

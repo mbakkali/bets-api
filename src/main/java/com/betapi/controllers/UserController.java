@@ -1,5 +1,8 @@
 package com.betapi.controllers;
 
+import com.betapi.controllers.dtos.UserDTO;
+import com.betapi.controllers.exceptions.DeleteOwnUserException;
+import com.betapi.controllers.mappers.UserMapper;
 import com.betapi.models.User;
 import com.betapi.repositories.UserRepository;
 import com.google.common.base.Strings;
@@ -7,12 +10,16 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @CrossOrigin
 @RestController
@@ -31,59 +38,65 @@ public class UserController {
     }
 
     @GetMapping(path = "/users")
-    public List<User> getUsers() {
-        return Lists.newArrayList(userRepository.findAll());
+    public List<UserDTO> getUsers() {
+        return Lists.newArrayList(userRepository.findAll()).stream().map(UserMapper::toDto).collect(toList());
     }
 
-    @GetMapping()
-    @RequestMapping({"/validateLogin/{authorization}"})
-    public User validateLogin(@PathVariable String authorization) {//Bad implem
-        if(Strings.isNullOrEmpty(authorization)){
-            return notFoundUser;
+    @GetMapping("/validateLogin/{authorization}")
+    public UserDTO validateLogin(@PathVariable String authorization) {//Bad implem
+        if (Strings.isNullOrEmpty(authorization)) {
+            return UserMapper.toDto(notFoundUser);
         }
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] decodedByteArray = decoder.decode(authorization);
         String username = new String(decodedByteArray).split(":")[0];
         String pwd = new String(decodedByteArray).split(":")[1];
-        Optional<User> byId = userRepository.findById(username);
+        Optional<User> dbUser = userRepository.findByUsername(username);
 
-        if(byId.isPresent()){
-            if(byId.get().getUsername().equals(username) && byId.get().getPassword().equals(passwordEncoder.encode(pwd))){
-                return byId.get();
-            }else {
-               return notFoundUser;
+        if (dbUser.isPresent()) {
+            if (passwordEncoder.matches(pwd, dbUser.get().getPassword())) {
+                return UserMapper.toDto(dbUser.get());
+            } else {
+                return UserMapper.toDto(notFoundUser);
             }
-        }else {
-            return notFoundUser;
+        } else {
+            return UserMapper.toDto(notFoundUser);
         }
     }
 
-    @DeleteMapping(path = {"/users/{id}"})
-    public User deleteUser(@PathVariable("id") String id) {
-        User deletedEmp = userRepository.findById(id).orElseGet(null);
+    @DeleteMapping(path = {"/users/{login}"})
+    public UserDTO deleteUser(@PathVariable("login") String login) throws Exception {
+        User deletedEmp = userRepository.findByUsername(login).orElseGet(null);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
         if (deletedEmp == null) {
-            logger.error("Can't find user with id " + id);
+            logger.error("Can't find user with id " + login);
             return null;
+        } else if (deletedEmp.getUsername().equals(currentPrincipalName)) {
+            logger.error("Can't delete your own person : " + login);
+            throw new DeleteOwnUserException("Can't delete your own person : \" + login");
         } else {
-            userRepository.deleteById(id);
-            return deletedEmp;
+            userRepository.delete(deletedEmp);
+            return UserMapper.toDto(deletedEmp);
         }
     }
 
 
     @PostMapping(path = "/users")
-    public User createUser(@RequestBody User user) {
+    public UserDTO createUser(@RequestBody UserDTO user) {
         User saved;
         try {
-            saved = userRepository.save(user);
-            return saved;
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+            saved = userRepository.save(UserMapper.toUser(user));
+            return UserMapper.toDto(saved);
         } catch (Exception e) {
             logger.error("Can't save user " + user.toString());
         }
         return null;
     }
 
-    private User notFoundUser(){
+    private User notFoundUser() {
         User notFoundUser = new User();
         return notFoundUser;
     }
