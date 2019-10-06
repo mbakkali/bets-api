@@ -1,10 +1,20 @@
 # bets-api
 
 Bets-api is a system made to help clients register their bets on Sport games 
-- Swagger PROD EC2 : (http://ec2-34-218-226-215.us-west-2.compute.amazonaws.com:8080/swagger-ui.html
-- Logs PROD EC2 : (http://ec2-34-218-226-215.us-west-2.compute.amazonaws.com:8080/actuator/logfile)
+- Gui : https://parishaitiens.com
+- Server : https://api.parishaitiens.com:8080/
+- Healthcheck : https://api.parishaitiens.com:8080/actuator/health
+- Swagger : https://api.parishaitiens.com:8080/bets-api/swagger-ui.html
+[Deployment with Code Pipeline (AWS) ](https://eu-west-3.console.aws.amazon.com/codesuite/codepipeline/pipelines/bets-api/)
 
-## How to run locally
+### Coverage on SonarCloud
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mbakkali_bets-api&metric=bugs)](https://sonarcloud.io/dashboard?id=mbakkali_bets-api)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mbakkali_bets-api&metric=coverage)](https://sonarcloud.io/dashboard?id=mbakkali_bets-api)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=mbakkali_bets-api&metric=ncloc)](https://sonarcloud.io/dashboard?id=mbakkali_bets-api)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mbakkali_bets-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=mbakkali_bets-api)
+
+
+### How to run locally
 On Intelli J use the spring profile `local`  or add the option `-Dspring.profiles.active=local` to the command line
 
 ![springprofile](docs/profile-intellij.png)
@@ -15,11 +25,11 @@ This profile will use an inmemory database and ou will be able to use the swagge
  | Password : root
 ` 
 
-## Database 
+### Database 
 The PROD database is hosted on RDS with Postgres SQL. 
 If you're having troubles connecting to the database you may check the security rules and groups setup. The local database runs on H2 (In memory database)
 
-## Logs
+### Logs
 In order to see realtime logs you need to connect to the EC2-instance using ssh with a .pem key
 <br>
 `ssh -i "key.pem" ec2-user@ec2-34-218-226-215.us-west-2.compute.amazonaws.com`
@@ -33,7 +43,7 @@ You can view the logs using the actuator endpoint :
 https://anceom.com:8081/bets-api/actuator/logfile
 
 
-## Setuping Continous Delivery using AWS `Codedeploy`and `Codepipeline`
+### Setuping Continous Delivery using AWS `Codedeploy`and `Codepipeline`
 
 #### Prerequisites
 ###### Check the AWS documentation for codedeploy
