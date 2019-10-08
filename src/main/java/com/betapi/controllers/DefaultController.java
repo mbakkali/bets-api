@@ -1,16 +1,18 @@
 package com.betapi.controllers;
 
+import com.betapi.controllers.exceptions.DeleteOwnUserException;
+import com.betapi.controllers.exceptions.GameNotFoundException;
 import com.betapi.models.*;
+import com.betapi.repositories.BetOwnerRepository;
 import com.betapi.repositories.BetRepository;
 import com.betapi.repositories.GameRepository;
-import com.betapi.repositories.BetOwnerRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.google.common.collect.Lists;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,8 +31,8 @@ public class DefaultController {
     private final BetRepository betRepository;
     private final BetOwnerRepository betOwnerRepository;
     private Locale locale = Locale.forLanguageTag( "fr-FR" );
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm").withLocale(locale);
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM").withLocale(locale);
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm").withLocale(locale);
+    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM").withLocale(locale);
 
     @Autowired
     public DefaultController(GameRepository gameRepository, BetRepository betRepository, BetOwnerRepository betOwnerRepository) {
@@ -40,14 +42,13 @@ public class DefaultController {
     }
 
     @GetMapping("/games/{id}")
-    public Game getOneGame(@PathVariable Long id) {
+    public Game getOneGame(@PathVariable Long id) throws GameNotFoundException {
         if(id != null){
             // Replace pattern-breaking characters
             logger.info("Get One Game: " + id);
-            return gameRepository.findById(id).orElseGet(null);
+            return gameRepository.findById(id).orElseThrow(() -> new GameNotFoundException("test"));
         }
         return null;
-
     }
 
     @DeleteMapping("/games/delete/{id}")
