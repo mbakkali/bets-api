@@ -1,6 +1,5 @@
 package com.betapi.controllers;
 
-import com.betapi.controllers.exceptions.DeleteOwnUserException;
 import com.betapi.controllers.exceptions.GameNotFoundException;
 import com.betapi.models.*;
 import com.betapi.repositories.BetOwnerRepository;
@@ -46,9 +45,10 @@ public class DefaultController {
         if(id != null){
             // Replace pattern-breaking characters
             logger.info("Get One Game: " + id);
-            return gameRepository.findById(id).orElseThrow(() -> new GameNotFoundException("test"));
+            return gameRepository.findById(id).orElseThrow(() -> new GameNotFoundException("Game not found"));
         }
         return null;
+
     }
 
     @DeleteMapping("/games/delete/{id}")
