@@ -24,12 +24,9 @@ public class BetOwner {
     @Column
     private String bets;
 
+    @Column
+    private Double combinedBetAmount;
 
-    public BetOwner(Long id, LocalDateTime timestamp, String bets){
-        this.id = id;
-        this.timestamp = timestamp;
-        this.bets = bets;
-    }
 
     public BetOwner(){
 
@@ -62,5 +59,13 @@ public class BetOwner {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Double getCombinedBetAmount() {
+        return combinedBetAmount;
+    }
+
+    public void setCombinedBetAmount(Double combinedBetAmount) {
+        this.combinedBetAmount = combinedBetAmount;
     }
 }

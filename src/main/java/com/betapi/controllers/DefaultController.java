@@ -1,6 +1,8 @@
 package com.betapi.controllers;
 
+import com.betapi.controllers.dtos.SaveBetsDTO;
 import com.betapi.controllers.exceptions.GameNotFoundException;
+import com.betapi.controllers.mappers.BetMapper;
 import com.betapi.models.*;
 import com.betapi.repositories.BetOwnerRepository;
 import com.betapi.repositories.BetRepository;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -106,9 +109,9 @@ public class DefaultController {
 
 
     @PostMapping(value = "/bets")
-    public Long saveBets(@RequestBody List<Bet> newBets) throws JsonProcessingException {
-        logger.info("Saving : " + new ObjectMapper().writeValueAsString(newBets));
-        return betService.saveBet(newBets).getId();
+    public Long saveBets(@RequestBody SaveBetsDTO betsToSave) throws JsonProcessingException {
+        logger.info("Saving : " + new ObjectMapper().writeValueAsString(betsToSave));
+        return betService.saveBet(betsToSave.getBets().stream().map(BetMapper::toBet).collect(Collectors.toList()), betsToSave.getCombinedBetAmount()).getId();
     }
 
 

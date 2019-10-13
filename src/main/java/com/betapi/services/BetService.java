@@ -67,8 +67,11 @@ public class BetService {
         return fullBets;
     }
 
-    public BetOwner saveBet(List<Bet> newBets){
+    public BetOwner saveBet(List<Bet> newBets, Double combinedAmount){
         BetOwner betOwner = new BetOwner();
+        if(combinedAmount != null){
+            betOwner.setCombinedBetAmount(combinedAmount);
+        }
         BetOwner savedBetOwner = betOwnerRepository.save(betOwner);
         for (Bet newBet : newBets) {
             newBet.setOwnerId(savedBetOwner.getId());
