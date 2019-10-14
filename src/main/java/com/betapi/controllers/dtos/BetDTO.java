@@ -8,11 +8,10 @@ import java.time.LocalDateTime;
 
 public class BetDTO {
 
-
-
     private Long gameId;
     private Long ownerId;
     private Double amount;
+    private Double combinedAmount;
     private BetChoice betChoice;
     private LocalDateTime datetime;
 
@@ -51,5 +50,13 @@ public class BetDTO {
 
     public void setBetChoice(BetChoice betChoice) {
         this.betChoice = betChoice;
+    }
+
+    public Double getCombinedAmount() {
+        return combinedAmount;
+    }
+
+    public void setCombinedAmount(Double combinedAmount) {
+        this.combinedAmount = combinedAmount;
     }
 }

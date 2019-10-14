@@ -29,6 +29,7 @@ public class BetApiApplication {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+
 	public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication(BetApiApplication.class);
 		springApplication.addListeners(new ApplicationPidFileWriter());

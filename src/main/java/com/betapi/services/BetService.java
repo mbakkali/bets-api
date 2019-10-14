@@ -1,5 +1,7 @@
 package com.betapi.services;
 
+import com.betapi.controllers.exceptions.BetOwnerNotFoundException;
+import com.betapi.controllers.exceptions.GameNotFoundException;
 import com.betapi.models.*;
 import com.betapi.repositories.BetOwnerRepository;
 import com.betapi.repositories.BetRepository;
@@ -46,6 +48,7 @@ public class BetService {
         for (Bet bet : bets) {
             FullBet fullBet = new FullBet();
             fullBet.setAmount(bet.getAmount());
+            fullBet.setCombinedAmount(bet.getCombinedAmount());
             fullBet.setId(bet.getId());
             fullBet.setSavedtime(bet.getDatetime());
             fullBet.setBetChoice(bet.getBetChoice());
@@ -88,6 +91,10 @@ public class BetService {
         return savedBetOwner;
     }
 
+    public BetOwner getBetOwner(Long id) throws BetOwnerNotFoundException {
+        return betOwnerRepository.findById(id).orElseThrow(() -> new BetOwnerNotFoundException("Bet owner not found"));
+
+    }
 
     public List<FullBet> getUserBets(Long id){
         BetOwner betOwner = betOwnerRepository.findById(id).orElseGet(null);
@@ -104,6 +111,7 @@ public class BetService {
         bets.forEach(bet -> {
             FullBet fullBet = new FullBet();
             fullBet.setAmount(bet.getAmount());
+            fullBet.setCombinedAmount(bet.getCombinedAmount());
             fullBet.setId(bet.getId());
             fullBet.setSavedtime(bet.getDatetime());
             fullBet.setBetChoice(bet.getBetChoice());
@@ -148,7 +156,15 @@ public class BetService {
 
         double totalAmout = 0D;
         for (FullBet bet : allBets) {
-            totalAmout += bet.getAmount();
+            if(bet.getAmount() != null){
+                totalAmout += bet.getAmount();
+            }
+        }
+
+
+        Map<Long, List<FullBet>> collect = allBets.stream().filter(fullBet -> fullBet.getCombinedAmount() != null).collect(Collectors.groupingBy(FullBet::getOwnerId));
+        for (Map.Entry<Long, List<FullBet>> longListEntry : collect.entrySet()) {
+            totalAmout+= longListEntry.getValue().get(0).getCombinedAmount();
         }
 
         SortedMap<LocalDate, Double> amountBydaysMap = new TreeMap<>();
@@ -164,7 +180,11 @@ public class BetService {
             if (bet.getSavedtime().isAfter(LocalDateTime.now().minusWeeks(1).plusDays(1))) {
                 LocalDate dayOfWeek = bet.getSavedtime().toLocalDate();
                 Double currentAmount = amountBydaysMap.get(dayOfWeek);
-                amountBydaysMap.put(dayOfWeek, currentAmount + bet.getAmount());
+                if(bet.getAmount() != null){
+                    amountBydaysMap.put(dayOfWeek, currentAmount + bet.getAmount());
+                }else {
+
+                }
             }
         }
         List<ChartElement> amountByDays = new ArrayList<>();
@@ -177,10 +197,18 @@ public class BetService {
             }
             String gameKey = bet.getTeamA() + " - " + bet.getTeamB() + " le " + bet.getGametime().format(formatter);
             if (!top10GamesMap.containsKey(gameKey)) {
-                top10GamesMap.put(gameKey, bet.getAmount());
+                if(bet.getAmount() != null){
+                    top10GamesMap.put(gameKey, bet.getAmount());
+                }else {
+                    top10GamesMap.put(gameKey, 0D);
+                }
             } else {
-                Double currentAmount = top10GamesMap.get(gameKey);
-                top10GamesMap.put(gameKey, currentAmount + bet.getAmount());
+                if(bet.getAmount() != null){
+                    Double currentAmount = top10GamesMap.get(gameKey);
+                    top10GamesMap.put(gameKey, currentAmount + bet.getAmount());
+                }else {
+                    top10GamesMap.put(gameKey, 0D);
+                }
             }
         }
         List<ChartElement> top10Games = new ArrayList<>();

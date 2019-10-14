@@ -30,6 +30,9 @@ public class Bet {
     private Double amount;
 
     @Column
+    private Double combinedAmount;
+
+    @Column
     private BetChoice betChoice;
 
     @Column
@@ -79,5 +82,13 @@ public class Bet {
 
     public void setBetChoice(BetChoice betChoice) {
         this.betChoice = betChoice;
+    }
+
+    public Double getCombinedAmount() {
+        return combinedAmount;
+    }
+
+    public void setCombinedAmount(Double combinedAmount) {
+        this.combinedAmount = combinedAmount;
     }
 }

@@ -1,10 +1,11 @@
-package com.betapi.models;
+package com.betapi.controllers.dtos;
+
+import com.betapi.models.BetChoice;
 
 import java.time.LocalDateTime;
 
-public class FullBet {
+public class FullBetDTO {
 
-    private Long id;
     private Long gameId;
     private String teamA;
     private String teamB;
@@ -18,17 +19,8 @@ public class FullBet {
     private LocalDateTime savedtime;
     private Long ownerId;
 
-    public FullBet(){
+    public FullBetDTO(){
 
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTeamA() {

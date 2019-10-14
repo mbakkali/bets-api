@@ -5,7 +5,7 @@ Bets-api is a system made to help clients register their bets on Sport games
 - Server : https://api.parishaitiens.com:8080/
 - Healthcheck : https://api.parishaitiens.com:8080/actuator/health
 - Swagger : https://api.parishaitiens.com:8080/bets-api/swagger-ui.html
-[Deployment with Code Pipeline (AWS) ](https://eu-west-3.console.aws.amazon.com/codesuite/codepipeline/pipelines/bets-api/)
+- [Deployment with Code Pipeline (AWS) ](https://eu-west-3.console.aws.amazon.com/codesuite/codepipeline/pipelines/bets-api/)
 
 ### Coverage on SonarCloud
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mbakkali_bets-api&metric=bugs)](https://sonarcloud.io/dashboard?id=mbakkali_bets-api)
@@ -15,6 +15,12 @@ Bets-api is a system made to help clients register their bets on Sport games
 
 
 ### How to run locally
+
+- Get Java Developpement Kit (JDK not JRE) : https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+- Get Maven binaries (mvn) : https://maven.apache.org/download.cgi
+- Set a `JAVA_HOME` and `MAVEN_HOME` environment variables and add them to the path
+- Download IntelliJ 
+
 On Intelli J use the spring profile `local`  or add the option `-Dspring.profiles.active=local` to the command line
 
 ![springprofile](docs/profile-intellij.png)

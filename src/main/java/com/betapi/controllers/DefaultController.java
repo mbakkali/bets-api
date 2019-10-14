@@ -1,6 +1,8 @@
 package com.betapi.controllers;
 
+import com.betapi.controllers.dtos.BetsDTO;
 import com.betapi.controllers.dtos.SaveBetsDTO;
+import com.betapi.controllers.exceptions.BetOwnerNotFoundException;
 import com.betapi.controllers.exceptions.GameNotFoundException;
 import com.betapi.controllers.mappers.BetMapper;
 import com.betapi.models.*;
@@ -81,9 +83,12 @@ public class DefaultController {
 
 
     @GetMapping("/bets/info/{id}")
-    public List<FullBet> getUserBets(@PathVariable Long id) {
+    public BetsDTO getUserBets(@PathVariable Long id) throws BetOwnerNotFoundException {
         logger.info("Get Owner bets : " + id);
-        return betService.getUserBets(id);
+        BetsDTO betsDTO = new BetsDTO();
+        betsDTO.setBets(betService.getUserBets(id).stream().map(BetMapper::toFullBetDTO).collect(Collectors.toList()));
+        betsDTO.setCombinedBetAmount(betService.getBetOwner(id).getCombinedBetAmount());
+        return betsDTO;
     }
 
     @DeleteMapping("/bets/delete/user/{id}")
