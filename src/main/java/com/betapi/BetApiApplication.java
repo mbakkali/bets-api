@@ -40,7 +40,6 @@ public class BetApiApplication {
 	public void setupLocalDatabase(){
 		if(Arrays.asList(env.getActiveProfiles()).contains("local")){
 			logger.info("Creating root user ...");
-
 			User user = new User();
 			user.setUsername("root");
 			user.setPassword(passwordEncoder.encode("root"));
