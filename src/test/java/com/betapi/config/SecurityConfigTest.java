@@ -17,7 +17,7 @@ class SecurityConfigTest {
 
     @Test
     void encryptPassword() {
-        String password = "root";
+        String password = "user";
         String encoded = passwordEncoder.encode(password);
         System.out.println(encoded);
     }
