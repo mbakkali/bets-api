@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,11 @@ public class UserController {
     @GetMapping(path = "/users")
     public List<UserDTO> getUsers() {
         return Lists.newArrayList(userRepository.findAll()).stream().map(UserMapper::toDto).collect(toList());
+    }
+
+    @GetMapping(path = "/test")
+    public List<String> test() {
+        return new ArrayList<>();
     }
 
     @GetMapping("/validateLogin/{authorization}")

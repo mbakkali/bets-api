@@ -258,6 +258,15 @@ ssh -i yourpemkey.pem ubuntu@YOUR_INSTANCE_NAME.eu-west-3.compute.amazonaws.com
 see https://docs.aws.amazon.com/codedeploy/latest/userguide/codedeploy-agent-operations-install-ubuntu.html
 
 ```
+
+#Install java 8 
+sudo apt update
+sudo apt install openjdk-8-jdk openjdk-8-jre
+
+#Install Maven 
+sudo apt install maven
+
+#Codedeploy agent
 sudo apt-get update
 sudo apt-get install ruby2.0
 sudo apt-get install wget
@@ -268,6 +277,9 @@ sudo ./install auto
 
 # Check the agent is running fine
 sudo service codedeploy-agent status 
+
+
+
 ```
 
 ##### Explanation of appspec.yml
