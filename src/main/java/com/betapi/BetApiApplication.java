@@ -38,9 +38,8 @@ public class BetApiApplication {
 
 	@PostConstruct
 	public void setupLocalDatabase(){
-		if(Arrays.asList(env.getActiveProfiles()).contains("local")){
-			logger.info("Creating root user ...");
 
+			logger.info("Creating root user ...");
 			User user = new User();
 			user.setUsername("root");
 			user.setPassword(passwordEncoder.encode("root"));
@@ -50,7 +49,7 @@ public class BetApiApplication {
 			logger.info("Created root user with success");
 			logger.info("Username : root");
 			logger.info("Password : root");
-		}
+		
 	}
 
 

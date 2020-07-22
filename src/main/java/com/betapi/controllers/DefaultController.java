@@ -51,6 +51,7 @@ public class DefaultController {
 
     }
 
+
     @DeleteMapping("/games/delete/{id}")
     public void deleteOneGame(@PathVariable Long id) {
         gameRepository.deleteById(id);
