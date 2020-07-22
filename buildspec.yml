@@ -7,8 +7,6 @@ phases:
     commands:
       - echo Build started on `date`
       - mvn clean install
-      - cp deploy/start.sh deploy/start.sh
-
 artifacts:
   files:
     - target/bets-api.jar #main jar
