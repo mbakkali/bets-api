@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.Optional;
 
 @SpringBootApplication()
 public class BetApiApplication {
@@ -38,7 +39,8 @@ public class BetApiApplication {
 
 	@PostConstruct
 	public void setupLocalDatabase(){
-
+		Optional<User> root = userRepository.findByUsername("root");
+		if(!root.isPresent()){
 			logger.info("Creating root user ...");
 			User user = new User();
 			user.setUsername("root");
@@ -49,6 +51,8 @@ public class BetApiApplication {
 			logger.info("Created root user with success");
 			logger.info("Username : root");
 			logger.info("Password : root");
+		}
+
 
 	}
 
