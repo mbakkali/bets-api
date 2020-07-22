@@ -7,8 +7,11 @@ phases:
     commands:
       - echo Build started on `date`
       - mvn clean install
+      - cp deploy/start.sh deploy/start.sh
+
 artifacts:
   files:
-    - target/bets-api.jar
-    - appspec.yml
-    - deploy/**
+    - target/bets-api.jar #main jar
+    - src/main/resources/** #properties
+    - appspec.yml #appspec for CodeDeploy agent
+    - deploy/** #deploy folder with start/stop scripts

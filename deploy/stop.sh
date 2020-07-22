@@ -3,7 +3,8 @@
 PID_PATH="/home/ubuntu/bets-api/application.pid"
 if [ ! -f "$PID_PATH" ]; then
    echo "STOP - Process Id FilePath($PID_PATH) Not found with application.pid : using grep  "
-   sudo kill $(ps aux | grep bets-api | grep -v 'grep' | awk '{print $2}')
+   (sudo kill $(ps aux | grep bets-api | grep -v 'grep' | awk '{print $2}')) ||  echo "Process is not running"
+
 else
 pid=`cat $PID_PATH`
        echo "STOP - Stopping app wih pid $pid"

@@ -19,3 +19,7 @@ hooks:
     - location: deploy/before-install.sh
       timeout: 20
       runas: ubuntu
+  AfterInstall:
+    - location: deploy/after-install.sh
+      timeout: 20
+      runas: ubuntu

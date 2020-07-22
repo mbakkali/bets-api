@@ -49,7 +49,7 @@ public class BetApiApplication {
 			logger.info("Created root user with success");
 			logger.info("Username : root");
 			logger.info("Password : root");
-		
+
 	}
 
 
